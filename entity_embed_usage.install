@@ -1,0 +1,81 @@
+<?php
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_schema()
+ */
+function entity_embed_usage_schema() {
+  $schema['entity_embed_usage'] = [
+    'description' => 'Stores information about entity embeds in various fields of entities.',
+    'fields' => [
+      'entity_embed_usage_id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => "",
+      ),
+      'embedded_entity_type' => [
+        'description' => '',
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'default' => 'node',
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+      ],
+      'embedded_entity_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The entity_id of the embedded.',
+      ],
+      'host_entity_type' => [
+        'description' => '',
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'default' => 'node',
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+      ],
+      'host_entity_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The entity_id of the embedded.',
+      ],
+      'host_entity_field_name' => [
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'default' => '',
+        'length' => FieldStorageConfig::NAME_MAX_LENGTH,
+        'description' => 'The field_name of the field where the entity has been embedded.',
+      ],
+      'host_entity_field_delta' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => '',
+      ],
+      'host_entity_field_property' => [
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'default' => '',
+        'length' => FieldStorageConfig::NAME_MAX_LENGTH, // TODO: Find current limit
+        'description' => 'The property of the field where the entity has been embedded.',
+      ],
+    ],
+    'primary key' => [
+      'entity_embed_usage_id',
+    ],
+    'indexes' => [
+      'embedded_entity_type' => [
+        'embedded_entity_type',
+      ],
+      'embedded_entity_id' => [
+        'embedded_entity_id',
+      ],
+    ],
+  ];
+  return $schema;
+}
