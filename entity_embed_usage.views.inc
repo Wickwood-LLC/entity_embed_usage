@@ -142,7 +142,7 @@ function entity_embed_usage_views_data() {
     'title' => t('Host entity field name'),
     'help' => t('Host entity field name'),
     'field' => [
-      'id' => 'standard',
+      'id' => 'entity_embed_usage_field_name',
     ],
     'sort' => [
       'id' => 'standard',
