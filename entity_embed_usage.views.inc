@@ -190,6 +190,25 @@ function entity_embed_usage_views_data_alter(&$data) {
       ],
     ];
 
+    $data[$base_table]['entity_embed_usage_host'] = [
+      'title' => t('@entity_type as host entities', $args),
+      'help' => t('Relate all @entity_type as host.', $args),
+      'relationship' => [
+        'group' => t('Host @entity_type_label', $args),
+        'label' => t('Host @entity_type_label', $args),
+        'base' => 'entity_embed_usage',
+        'base field' => 'host_entity_id',
+        'relationship field' => $entity_type->getKey('id'),
+        'id' => 'standard',
+        'extra' => [
+          [
+            'field' => 'host_entity_type',
+            'value' => $entity_type_id,
+          ],
+        ],
+      ],
+    ];
+
     $data['entity_embed_usage'][$entity_type_id . '_embedded'] = [
       'title' => t('@entity_type as embedded entities', $args),
       'help' => t('Relate all @entity_type as embedded entities.', $args),
@@ -203,6 +222,25 @@ function entity_embed_usage_views_data_alter(&$data) {
         'extra' => [
           [
             'left_field' => 'embedded_entity_type',
+            'value' => $entity_type_id,
+          ],
+        ],
+      ],
+    ];
+
+    $data[$base_table]['entity_embed_usage_embedded'] = [
+      'title' => t('@entity_type as embedded entities', $args),
+      'help' => t('Relate all @entity_type as embedded entities.', $args),
+      'relationship' => [
+        'group' => t('Embedded @entity_type_label', $args),
+        'label' => t('Embedded @entity_type_label', $args),
+        'base' => 'entity_embed_usage',
+        'base field' => 'embedded_entity_id',
+        'relationship field' => $entity_type->getKey('id'),
+        'id' => 'standard',
+        'extra' => [
+          [
+            'field' => 'embedded_entity_type',
             'value' => $entity_type_id,
           ],
         ],
