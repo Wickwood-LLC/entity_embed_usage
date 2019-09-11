@@ -31,6 +31,9 @@ function entity_embed_usage_entity_presave(EntityInterface $entity) {
 
             $dom = Html::load($value[$property]);
             $xpath = new \DOMXPath($dom);
+
+            $embeds = [];
+
             foreach ($xpath->query('//drupal-entity[@data-entity-type and (@data-entity-uuid or @data-entity-id) and (@data-entity-embed-display or @data-view-mode)]') as $node) {
               /** @var \DOMElement $node */
               $embedded_entity_type = $node->getAttribute('data-entity-type');
@@ -55,22 +58,34 @@ function entity_embed_usage_entity_presave(EntityInterface $entity) {
               }
 
               if ($embedded_entity instanceof EntityInterface) {
-                // TODO: Combine INSERT queries?
-                \Drupal::database()
-                  ->insert('entity_embed_usage')
-                  ->fields(array(
-                    'embedded_entity_type' => $embedded_entity_type,
-                    'embedded_entity_bundle' => $embedded_entity->bundle(),
-                    'embedded_entity_id' => $embedded_entity->id(),
-                    'host_entity_type' => $entity->getEntityTypeId(),
-                    'host_entity_bundle' => $entity->bundle(),
-                    'host_entity_id' => $entity->id(),
-                    'host_entity_field_name' => $field_name,
-                    'host_entity_field_delta' => $delta,
-                    'host_entity_field_property'=> $property,
-                  ))
-                  ->execute();
+                $embedded_entity_bundle = $embedded_entity->bundle();
+                $embedded_entity_id = $embedded_entity->id();
+                if (!isset($embeds["$embedded_entity_type.$embedded_entity_bundle.$embedded_entity_id"])) {
+                  $embeds["$embedded_entity_type.$embedded_entity_bundle.$embedded_entity_id"] = 1;
+                }
+                else {
+                  $embeds["$embedded_entity_type.$embedded_entity_bundle.$embedded_entity_id"]++;
+                }
               }
+            }
+            foreach ($embeds as $key => $count) {
+              list($embedded_entity_type, $embedded_entity_bundle, $embedded_entity_id) = explode('.', $key);
+              // TODO: Combine INSERT queries?
+              \Drupal::database()
+              ->insert('entity_embed_usage')
+              ->fields(array(
+                'embedded_entity_type' => $embedded_entity_type,
+                'embedded_entity_bundle' => $embedded_entity_bundle,
+                'embedded_entity_id' => $embedded_entity_id,
+                'host_entity_type' => $entity->getEntityTypeId(),
+                'host_entity_bundle' => $entity->bundle(),
+                'host_entity_id' => $entity->id(),
+                'host_entity_field_name' => $field_name,
+                'host_entity_field_delta' => $delta,
+                'host_entity_field_property'=> $property,
+                'count' => $count,
+              ))
+              ->execute();
             }
           }
         }

@@ -78,6 +78,12 @@ function entity_embed_usage_schema() {
         'length' => FieldStorageConfig::NAME_MAX_LENGTH, // TODO: Find current limit
         'description' => 'The property of the field where the entity has been embedded.',
       ],
+      'count' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => '0',
+        'description' => 'Number of times the entity got embedded in field.',
+      ],
     ],
     'primary key' => [
       'entity_embed_usage_id',

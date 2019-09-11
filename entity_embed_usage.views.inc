@@ -189,6 +189,23 @@ function entity_embed_usage_views_data() {
     ],
   ];
 
+  $data['entity_embed_usage']['count'] = [
+    'title' => t('Count'),
+    'help' => t('Number of times the embedding happened.'),
+    'field' => [
+      'id' => 'numeric',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'numeric',
+    ],
+    'argument' => [
+      'id' => 'numeric',
+    ],
+  ];
+
   return $data;
 }
 
