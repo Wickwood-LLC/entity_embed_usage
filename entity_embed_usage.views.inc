@@ -53,6 +53,23 @@ function entity_embed_usage_views_data() {
     ],
   ];
 
+  $data['entity_embed_usage']['embedded_entity_bundle'] = [
+    'title' => t('Embedded entity bundle'),
+    'help' => t('Embedded entity bundle'),
+    'field' => [
+      'id' => 'standard',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'string',
+    ],
+    'argument' => [
+      'id' => 'string',
+    ],
+  ];
+
   $data['entity_embed_usage']['embedded_entity_id'] = [
     'title' => t('Embedded entity id'),
     'help' => t('Embedded entity id'),
@@ -73,6 +90,23 @@ function entity_embed_usage_views_data() {
   $data['entity_embed_usage']['host_entity_type'] = [
     'title' => t('Host entity type'),
     'help' => t('Host entity type'),
+    'field' => [
+      'id' => 'standard',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'string',
+    ],
+    'argument' => [
+      'id' => 'string',
+    ],
+  ];
+
+  $data['entity_embed_usage']['host_entity_bundle'] = [
+    'title' => t('Host entity bundle'),
+    'help' => t('Host entity bundle'),
     'field' => [
       'id' => 'standard',
     ],

@@ -19,7 +19,14 @@ function entity_embed_usage_schema() {
         'description' => '',
         'type' => 'varchar_ascii',
         'not null' => TRUE,
-        'default' => 'node',
+        'default' => 'media',
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+      ],
+      'embedded_entity_bundle' => [
+        'description' => '',
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'default' => '',
         'length' => EntityTypeInterface::ID_MAX_LENGTH,
       ],
       'embedded_entity_id' => [
@@ -34,6 +41,13 @@ function entity_embed_usage_schema() {
         'type' => 'varchar_ascii',
         'not null' => TRUE,
         'default' => 'node',
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+      ],
+      'host_entity_bundle' => [
+        'description' => '',
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'default' => '',
         'length' => EntityTypeInterface::ID_MAX_LENGTH,
       ],
       'host_entity_id' => [
