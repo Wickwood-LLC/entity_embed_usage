@@ -5,20 +5,33 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Html;
 
 /**
+ * Get supported field types with properties to scan.
+ */
+function entity_embed_usage_supported_field_types() {
+  return [
+    'text_with_summary' => ['value', 'summary'],
+    'text' => ['value'],
+    'text_long' => ['value'],
+  ];
+}
+
+/**
  * Implements hook_entity_presave().
  */
 function entity_embed_usage_entity_presave(EntityInterface $entity) {
   if ($entity instanceof ContentEntityBase) {
     $entity_field_manager = \Drupal::service('entity_field.manager');
     $entity_manager = \Drupal::service('entity_type.manager');
+    $supported_field_types = entity_embed_usage_supported_field_types();
     foreach ($entity_field_manager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle()) as $field_name => $field_definition) {
       if (!empty($field_definition->getTargetBundle())) {
-        if ($field_definition->getType() == 'text_with_summary') {
+        $field_type = $field_definition->getType();
+        if (in_array($field_type, array_keys($supported_field_types))) {
           $field = $entity->get($field_name);
           $values = $field->getValue();
           foreach ($values as $delta => $value) {
             // TODO: Delete usage records for this field-property
-            $properties = ['value', 'summary'];
+            $properties = $supported_field_types[$field_type];
             foreach ($properties as $property) {
               // TODO: Combine DELETE queries?
               $result = \Drupal::database()
