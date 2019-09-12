@@ -24,13 +24,13 @@ class ScanAllEntityEmbedUsageForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['help'] = [
       '#type' => 'item',
-      '#markup' => '<p>This page helps to scan all entity embeds in various content entities. The usage data will be store in database table.</p>',
+      '#markup' => '<p>This page helps to scan all entity embeds in various content entities. The usage data will be stored in database table. It is safe to run this process any time as you see any discrepancies in entity embed usage data.</p>',
     ];
 
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Scan for Embedded Entities'),
+      '#value' => t('Scan for Entity Embed Usage'),
     ];
     return $form;
   }

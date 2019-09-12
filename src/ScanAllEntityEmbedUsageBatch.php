@@ -5,8 +5,8 @@ namespace Drupal\entity_embed_usage;
 
 class ScanAllEntityEmbedUsageBatch {
   public static function scanForFieldInstance($entity_type_id, &$context){
-    $message = t('Scanning for all entities of type @entity_type_id...', array('@entity_type_id' => $entity_type_id));
-    $results = array();
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+    $message = t('Scanning for all entities of type @entity_type_label...', array('@entity_type_label' => $entity_type->getLabel()));
 
     // Initiate multistep processing.
     if (empty($context['sandbox'])) {
@@ -43,25 +43,13 @@ class ScanAllEntityEmbedUsageBatch {
       $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
     if ($context['finished']) {
-      drupal_set_message(t('Processed @count @entity_type_id items', ['@count' => $context['sandbox']['max'], '@entity_type_id' => $entity_type_id]));
+      drupal_set_message(t('Processed @count @entity_type_label items', ['@count' => $context['sandbox']['max'], '@entity_type_label' => $entity_type->getLabel()]));
     }
 
     $context['message'] = $message;
-    $context['results'] = $results;
   }
 
   function finishBatchCallback($success, $results, $operations) {
-    // The 'success' parameter means no fatal PHP errors were detected. All
-    // other error management should be handled using 'results'.
-    if ($success) {
-      $message = \Drupal::translation()->formatPlural(
-        count($results),
-        'One post processed.', '@count posts processed.'
-      );
-    }
-    else {
-      $message = t('Finished with an error.');
-    }
-    drupal_set_message($message);
+    // TODO: Anything else?
   }
 }
