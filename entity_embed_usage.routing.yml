@@ -1,0 +1,7 @@
+entity_embed_usage.form:
+  path: '/admin/config/entity-embed-usage'
+  defaults:
+    _form: '\Drupal\entity_embed_usage\Form\ScanAllEntityEmbedUsageForm'
+    _title: 'Scan All Entity Embed Usage'
+  requirements:
+    _permission: 'administer site configuration'
