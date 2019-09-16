@@ -46,7 +46,12 @@ class ScanAllEntityEmbedUsageForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $operations = [];
+    $operations = [
+      [
+        '\Drupal\entity_embed_usage\ScanAllEntityEmbedUsageBatch::clearAllData',
+        [],
+      ]
+    ];
 
     $entity_definitions =  \Drupal::entityTypeManager()->getDefinitions();
 
@@ -64,7 +69,7 @@ class ScanAllEntityEmbedUsageForm extends FormBase {
           if (in_array($field_type, array_keys($supported_field_types))) {
             $operations[] = [
               '\Drupal\entity_embed_usage\ScanAllEntityEmbedUsageBatch::scanForFieldInstance',
-              array($entity_type_id),
+              [$entity_type_id],
             ];
             break 2;
           }
@@ -72,11 +77,11 @@ class ScanAllEntityEmbedUsageForm extends FormBase {
       }
     }
 
-    $batch = array(
+    $batch = [
       'title' => t('Deleting Node...'),
       'operations' => $operations,
       'finished' => '\Drupal\entity_embed_usage\ScanAllEntityEmbedUsageBatch::finishBatchCallback',
-    );
+    ];
 
     batch_set($batch);
   }

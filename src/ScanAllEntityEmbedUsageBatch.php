@@ -4,6 +4,13 @@ namespace Drupal\entity_embed_usage;
 
 
 class ScanAllEntityEmbedUsageBatch {
+
+  public static function clearAllData(&$context) {
+    $context['message'] = t('Deleting all exiting data...');
+    \Drupal::database()->truncate('entity_embed_usage')->execute();
+    drupal_set_message(t('Deleted all existing data.'));
+  }
+
   public static function scanForFieldInstance($entity_type_id, &$context){
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
     $message = t('Scanning for all entities of type @entity_type_label...', array('@entity_type_label' => $entity_type->getLabel()));
@@ -18,7 +25,7 @@ class ScanAllEntityEmbedUsageBatch {
 
     // Process the next 100 if there are at least 100 left. Otherwise,
     // we process the remaining number.
-    $batch_size = 100;
+    $batch_size = 10;
     $max = $context['sandbox']['progress'] + $batch_size;
     if ($max > $context['sandbox']['max']) {
       $max = $context['sandbox']['max'];

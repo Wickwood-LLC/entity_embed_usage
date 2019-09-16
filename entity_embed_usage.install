@@ -57,6 +57,13 @@ function entity_embed_usage_schema() {
         'default' => 0,
         'description' => 'The entity_id of the embedded.',
       ],
+      'host_entity_vid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The revision id of the embedded entity.',
+      ],
       'host_entity_field_name' => [
         'type' => 'varchar_ascii',
         'not null' => TRUE,
