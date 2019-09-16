@@ -46,7 +46,6 @@ class ScanAllEntityEmbedUsageBatch {
     foreach ($entity_ids as $entity_id) {
       $entity = $entity_storage->load($entity_id);
       if ($entity_type->isRevisionable()) {
-        // TODO: find revisionIds() corresponds to all entities();
         //$revision_ids = $entity_storage->revisionIds($entity);
         $revision_ids =  \Drupal::database()->query(
           'SELECT ' . $revision_key . ' FROM {' . $entity_storage->getRevisionTable() . '} WHERE ' .  $id_key . '=:id ORDER BY ' . $revision_key,
@@ -55,14 +54,12 @@ class ScanAllEntityEmbedUsageBatch {
         // Record entity embed usage in each revision up to current one.
         foreach ($revision_ids as $revision_id) {
           $entity_revision = $entity_storage->loadRevision($revision_id);
-          //entity_embed_usage_scan_for_embeds($entity_revision);
           $data = entity_embed_usage_get_embeds_data($entity_revision);
           entity_embed_usage_save_embeds_data($data);
           //$context['sandbox']['revisions']++;
         }
       }
       else {
-        //entity_embed_usage_scan_for_embeds($entity);
         $data = entity_embed_usage_get_embeds_data($entity);
         entity_embed_usage_save_embeds_data($data);
         //$context['sandbox']['revisions']++;
