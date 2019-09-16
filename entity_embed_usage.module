@@ -88,6 +88,7 @@ function entity_embed_usage_get_embeds_data(EntityInterface $entity) {
       }
     }
   }
+  return $data;
 }
 
 function entity_embed_usage_save_embeds_data(array $data) {

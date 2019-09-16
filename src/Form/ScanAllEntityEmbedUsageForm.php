@@ -78,7 +78,7 @@ class ScanAllEntityEmbedUsageForm extends FormBase {
     }
 
     $batch = [
-      'title' => t('Deleting Node...'),
+      'title' => t('Scanning for embedded entities...'),
       'operations' => $operations,
       'finished' => '\Drupal\entity_embed_usage\ScanAllEntityEmbedUsageBatch::finishBatchCallback',
     ];

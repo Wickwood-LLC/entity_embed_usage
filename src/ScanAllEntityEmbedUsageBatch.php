@@ -21,6 +21,7 @@ class ScanAllEntityEmbedUsageBatch {
       $context['sandbox']['max'] = \Drupal::entityQuery($entity_type_id)
         ->count()
         ->execute();
+      //$context['sandbox']['revisions'] = 0;
     }
 
     // Process the next 100 if there are at least 100 left. Otherwise,
@@ -38,9 +39,34 @@ class ScanAllEntityEmbedUsageBatch {
       ->range($context['sandbox']['progress'], $batch_size); //specify results to return
     $entity_ids = $query->execute();
 
+    $entity_storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+    $id_key = $entity_type->getKey('id');
+    $revision_key = $entity_type->getKey('revision');
+
     foreach ($entity_ids as $entity_id) {
-      $entity = \Drupal::entityTypeManager()->getStorage($entity_type_id)->load($entity_id);
-      entity_embed_usage_scan_for_embeds($entity);
+      $entity = $entity_storage->load($entity_id);
+      if ($entity_type->isRevisionable()) {
+        // TODO: find revisionIds() corresponds to all entities();
+        //$revision_ids = $entity_storage->revisionIds($entity);
+        $revision_ids =  \Drupal::database()->query(
+          'SELECT ' . $revision_key . ' FROM {' . $entity_storage->getRevisionTable() . '} WHERE ' .  $id_key . '=:id ORDER BY ' . $revision_key,
+          [':id' => $entity->id()]
+        )->fetchCol();
+        // Record entity embed usage in each revision up to current one.
+        foreach ($revision_ids as $revision_id) {
+          $entity_revision = $entity_storage->loadRevision($revision_id);
+          //entity_embed_usage_scan_for_embeds($entity_revision);
+          $data = entity_embed_usage_get_embeds_data($entity_revision);
+          entity_embed_usage_save_embeds_data($data);
+          //$context['sandbox']['revisions']++;
+        }
+      }
+      else {
+        //entity_embed_usage_scan_for_embeds($entity);
+        $data = entity_embed_usage_get_embeds_data($entity);
+        entity_embed_usage_save_embeds_data($data);
+        //$context['sandbox']['revisions']++;
+      }
       // Update our progress!
       $context['sandbox']['progress']++;
     }
@@ -50,7 +76,14 @@ class ScanAllEntityEmbedUsageBatch {
       $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
     if ($context['finished']) {
-      drupal_set_message(t('Processed @count @entity_type_label items', ['@count' => $context['sandbox']['max'], '@entity_type_label' => $entity_type->getLabel()]));
+      drupal_set_message(t(
+        'Processed @count @entity_type_label items.',
+        [
+          '@count' => $context['sandbox']['max'],
+          '@entity_type_label' => $entity_type->getLabel(),
+          //'@revisions' => $context['sandbox']['revisions']
+        ]
+      ));
     }
 
     $context['message'] = $message;
