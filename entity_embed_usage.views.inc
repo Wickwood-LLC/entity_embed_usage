@@ -138,6 +138,23 @@ function entity_embed_usage_views_data() {
     ],
   ];
 
+  $data['entity_embed_usage']['host_entity_vid'] = [
+    'title' => t('Host entity revision id'),
+    'help' => t('Host entity revision id'),
+    'field' => [
+      'id' => 'numeric',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'numeric',
+    ],
+    'argument' => [
+      'id' => 'numeric',
+    ],
+  ];
+
   $data['entity_embed_usage']['host_entity_field_name'] = [
     'title' => t('Host entity field name'),
     'help' => t('Host entity field name'),
@@ -218,8 +235,10 @@ function entity_embed_usage_views_data_alter(&$data) {
     if (!$entity_type->entityClassImplements(ContentEntityInterface::class) || !$entity_type->getBaseTable()) {
       continue;
     }
+    $revisionable = $entity_type->isRevisionable();
 
     $base_table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
+    //$base_table = $entity_type->getBaseTable();
     $args = ['@entity_type' => $entity_type_id, '@entity_type_label' => $entity_type->getLabel()];
 
     $data['entity_embed_usage'][$entity_type_id . '_host'] = [
@@ -241,6 +260,32 @@ function entity_embed_usage_views_data_alter(&$data) {
       ],
     ];
 
+    if ($revisionable) {
+      $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
+      $data['entity_embed_usage'][$entity_type_id . '_host_revision'] = [
+        'title' => t('@entity_type as host entities (revisions)', $args),
+        'help' => t('Relate all revisions of @entity_type as host.', $args),
+        'relationship' => [
+          'group' => t('Host @entity_type_label (revisions)', $args),
+          'label' => t('Host @entity_type_label (revisions)', $args),
+          'base' => $revision_table,
+          'base field' => $entity_type->getKey('id'),
+          'relationship field' => 'host_entity_id',
+          'id' => 'standard',
+          'extra' => [
+            [
+              'left_field' => 'host_entity_type',
+              'value' => $entity_type_id,
+            ],
+            [
+              'left_field' => 'host_entity_vid',
+              'field' => $entity_type->getKey('revision'),
+            ],
+          ],
+        ],
+      ];
+    }
+
     $data[$base_table]['entity_embed_usage_host'] = [
       'title' => t('@entity_type as host entities', $args),
       'help' => t('Relate all @entity_type as host.', $args),
@@ -259,6 +304,32 @@ function entity_embed_usage_views_data_alter(&$data) {
         ],
       ],
     ];
+
+    if ($revisionable) {
+      $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
+      $data[$revision_table]['entity_embed_usage_host_revision'] = [
+        'title' => t('@entity_type as host entities (revisions)', $args),
+        'help' => t('Relate all revisions of @entity_type as host.', $args),
+        'relationship' => [
+          'group' => t('Host @entity_type_label (revisions)', $args),
+          'label' => t('Host @entity_type_label (revisions)', $args),
+          'base' => 'entity_embed_usage',
+          'base field' => 'host_entity_id',
+          'relationship field' => $entity_type->getKey('id'),
+          'id' => 'standard',
+          'extra' => [
+            [
+              'field' => 'host_entity_type',
+              'value' => $entity_type_id,
+            ],
+            [
+              'field' => 'host_entity_vid',
+              'left_field' => $entity_type->getKey('revision'),
+            ],
+          ],
+        ],
+      ];
+    }
 
     $data['entity_embed_usage'][$entity_type_id . '_embedded'] = [
       'title' => t('@entity_type as embedded entities', $args),
@@ -280,11 +351,11 @@ function entity_embed_usage_views_data_alter(&$data) {
     ];
 
     $data[$base_table]['entity_embed_usage_embedded'] = [
-      'title' => t('@entity_type as embedded entities', $args),
+      'title' => t('Usage of @entity_type as embedded entities', $args),
       'help' => t('Relate all @entity_type as embedded entities.', $args),
       'relationship' => [
-        'group' => t('Embedded @entity_type_label', $args),
-        'label' => t('Embedded @entity_type_label', $args),
+        'group' => t('Embedded @entity_type_label usage', $args),
+        'label' => t('Embedded @entity_type_label usage', $args),
         'base' => 'entity_embed_usage',
         'base field' => 'embedded_entity_id',
         'relationship field' => $entity_type->getKey('id'),
