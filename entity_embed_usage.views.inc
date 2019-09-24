@@ -264,7 +264,7 @@ function entity_embed_usage_views_data_alter(&$data) {
       $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
       $data['entity_embed_usage'][$entity_type_id . '_host_revision'] = [
         'title' => t('@entity_type as host entities (revisions)', $args),
-        'help' => t('Relate all revisions of @entity_type as host.', $args),
+        'help' => t('Relate to all revisions of @entity_type as host.', $args),
         'relationship' => [
           'group' => t('Host @entity_type_label (revisions)', $args),
           'label' => t('Host @entity_type_label (revisions)', $args),
@@ -309,7 +309,7 @@ function entity_embed_usage_views_data_alter(&$data) {
       $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
       $data[$revision_table]['entity_embed_usage_host_revision'] = [
         'title' => t('@entity_type as host entities (revisions)', $args),
-        'help' => t('Relate all revisions of @entity_type as host.', $args),
+        'help' => t('Relate to usage data as @entity_type as host.', $args),
         'relationship' => [
           'group' => t('Host @entity_type_label (revisions)', $args),
           'label' => t('Host @entity_type_label (revisions)', $args),

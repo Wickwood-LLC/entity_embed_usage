@@ -120,11 +120,14 @@ function entity_embed_usage_delete_embeds_data(EntityInterface $entity) {
  */
 function entity_embed_usage_entity_update(EntityInterface $entity) {
   if ($entity instanceof ContentEntityBase) {
+    $entity_type = $entity->getEntityType();
     $original = $entity->original;
-    $old_revision_id = $original->getRevisionId();
-    $new_revision_id = $entity->getRevisionId();
+    if ($original && $entity_type->isRevisionable()) {
+      $old_revision_id = $original->getRevisionId();
+      $new_revision_id = $entity->getRevisionId();
+    }
     $data = entity_embed_usage_get_embeds_data($entity);
-    if ($old_revision_id == $new_revision_id) {
+    if (!$entity_type->isRevisionable() || !$original || $old_revision_id == $new_revision_id) {
       // Need to discard old embeds data for this revision.
       entity_embed_usage_delete_embeds_data($entity);
     }
