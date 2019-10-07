@@ -40,9 +40,11 @@ class FieldName extends Standard {
     $value = $this->getValue($values, 'host_entity_field_name');
     $entity_type = $this->getValue($values, 'host_entity_type');
     $bundle = $this->getValue($values, 'host_entity_bundle');
-    $field_instance = \Drupal::entityTypeManager()->getStorage('field_config')->load("$entity_type.$bundle.$value");
+    if ($value && $entity_type && $bundle) {
+      $field_instance = \Drupal::entityTypeManager()->getStorage('field_config')->load("$entity_type.$bundle.$value");
     
-    return $this
-      ->sanitizeValue($field_instance->getLabel());
+      return $this
+        ->sanitizeValue($field_instance->getLabel());
+    }
   }
 }
