@@ -2,7 +2,6 @@
 
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityInterface;
-
 /**
  * Implements hook_views_data().
  */
@@ -225,7 +224,6 @@ function entity_embed_usage_views_data() {
 
   return $data;
 }
-
 /**
  * Implements hook_views_data_alter().
  */

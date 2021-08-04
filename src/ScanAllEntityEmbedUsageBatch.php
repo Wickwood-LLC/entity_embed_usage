@@ -8,7 +8,7 @@ class ScanAllEntityEmbedUsageBatch {
   public static function clearAllData(&$context) {
     $context['message'] = t('Deleting all exiting data...');
     \Drupal::database()->truncate('entity_embed_usage')->execute();
-    drupal_set_message(t('Deleted all existing data.'));
+    \Drupal::messenger()->addStatus(t('Deleted all existing data.'));
   }
 
   public static function scanForFieldInstance($entity_type_id, &$context){
@@ -73,7 +73,7 @@ class ScanAllEntityEmbedUsageBatch {
       $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
     if ($context['finished']) {
-      drupal_set_message(t(
+      \Drupal::messenger()->addStatus(t(
         'Processed @count @entity_type_label items.',
         [
           '@count' => $context['sandbox']['max'],

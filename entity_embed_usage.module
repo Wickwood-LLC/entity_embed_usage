@@ -3,7 +3,6 @@
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Html;
-
 /**
  * Get supported field types with properties to scan.
  */
@@ -14,7 +13,6 @@ function entity_embed_usage_supported_field_types() {
     'text_long' => ['value'],
   ];
 }
-
 function entity_embed_usage_get_embeds_data(EntityInterface $entity) {
   $data = [];
   $entity_field_manager = \Drupal::service('entity_field.manager');
@@ -90,7 +88,6 @@ function entity_embed_usage_get_embeds_data(EntityInterface $entity) {
   }
   return $data;
 }
-
 function entity_embed_usage_save_embeds_data(array $data) {
   $query = \Drupal::database()
     ->insert('entity_embed_usage')
@@ -105,7 +102,6 @@ function entity_embed_usage_save_embeds_data(array $data) {
   }
   $query->execute();
 }
-
 function entity_embed_usage_delete_embeds_data(EntityInterface $entity) {
   $result = \Drupal::database()
     ->delete('entity_embed_usage')
@@ -114,7 +110,6 @@ function entity_embed_usage_delete_embeds_data(EntityInterface $entity) {
     ->condition('host_entity_vid', $entity->getRevisionId())
     ->execute();
 }
-
 /**
  * Implements hook_entity_update().
  */
@@ -134,7 +129,6 @@ function entity_embed_usage_entity_update(EntityInterface $entity) {
     entity_embed_usage_save_embeds_data($data);
   }
 }
-
 /**
  * Implements hook_entity_insert().
  */

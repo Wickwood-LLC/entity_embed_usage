@@ -2,7 +2,6 @@
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\Entity\FieldStorageConfig;
-
 /**
  * Implements hook_schema()
  */
