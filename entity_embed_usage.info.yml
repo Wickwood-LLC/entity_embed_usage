@@ -2,6 +2,6 @@ name: 'Entity Embed Usage'
 type: module
 description: 'Shows embedded entity usage.'
 package: Embed
-core: 8.x
+core_version_requirement: ^8 || ^9
 dependencies:
 - entity_embed:entity_embed
