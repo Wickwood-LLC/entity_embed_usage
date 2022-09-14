@@ -51,11 +51,12 @@ function entity_embed_usage_schema() {
         'length' => EntityTypeInterface::ID_MAX_LENGTH,
       ],
       'host_entity_id' => [
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar_ascii',
+        // 'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0,
+        // 'default' => 0,
         'description' => 'The entity_id of the embedded.',
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
       ],
       'host_entity_vid' => [
         'type' => 'int',
