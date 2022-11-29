@@ -115,3 +115,11 @@ function entity_embed_usage_update_9100(&$sandbox) {
   $connection = \Drupal::database();
   $connection->schema()->changeField('entity_embed_usage', 'host_entity_vid', 'host_entity_vid', ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE, 'default' => 0, 'description' => 'The revision id of the embedded entity.',]);
 }
+
+/**
+ * Make host_entity_id varchar.
+ */
+function entity_embed_usage_update_9101(&$sandbox) {
+  $connection = \Drupal::database();
+  $connection->schema()->changeField('entity_embed_usage', 'host_entity_id', 'host_entity_id', ['type' => 'varchar_ascii', 'not null' => TRUE, 'description' => 'The entity_id of the embedded.', 'length' => EntityTypeInterface::ID_MAX_LENGTH,]);
+}
