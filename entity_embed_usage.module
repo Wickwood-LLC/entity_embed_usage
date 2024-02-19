@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Component\Utility\DeprecationHelper;
+use Drupal\Core\Utility\Error;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Html;
@@ -51,7 +53,7 @@ function entity_embed_usage_get_embeds_data(EntityInterface $entity) {
                 }
               }
               catch (EntityNotFoundException $e) {
-                watchdog_exception('media_extra', $e);
+                DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '10.1.0', fn() => Error::logException(\Drupal::logger('media_extra'), $e), fn() => watchdog_exception('media_extra', $e));
               }
 
               if ($embedded_entity instanceof EntityInterface) {
